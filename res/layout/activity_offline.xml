@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        
+        <EditText
+            android:id="@+id/city_name_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:background="@drawable/edittext"
+            android:hint="@string/city_name_hint"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="@dimen/font_26" />
+        <Button
+            android:id="@+id/download_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_default"
+            android:onClick="download"
+            android:text="@string/download"
+            android:textSize="@dimen/font_26" />
+        
+    </LinearLayout>
+        
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical" >
+
+       <TextView 
+	        android:layout_width="fill_parent"
+	        android:layout_height="30dp"
+	        android:padding="5dp"
+	        android:background="#C0C0C0"
+	        android:text="@string/all_cities"
+	        android:textSize="@dimen/font_26"
+	        android:textColor="#FFFFFF"/>
+        <ExpandableListView
+	        android:id="@+id/list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:background="#ffffff"
+	        android:cacheColorHint="#00000000"
+	        android:childDivider="@android:color/darker_gray"
+	        android:divider="@android:color/black"
+	        android:dividerHeight="1.5dip"
+	        android:listSelector="#00000000" />
+
+    </LinearLayout>
+
+</LinearLayout>

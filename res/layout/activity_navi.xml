@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFF"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_plate_global"
+        android:gravity="center" >
+
+        <LinearLayout 
+            android:id="@+id/start_search_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+	            android:id="@+id/start_tv"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="4"
+	            android:layout_margin="10dp"
+	            android:padding="10dp"
+	            android:background="@drawable/edittext"
+	            android:hint="@string/start_point"
+	            android:singleLine="true"
+	            android:textColor="#000000"
+	            android:textSize="@dimen/font_26">
+	            
+	            </EditText>
+            <ImageView 
+                android:id="@+id/start_search_iv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginRight="10dp"
+	            android:src="@drawable/btn_search32"
+	            android:contentDescription="@string/search_img"
+	            android:layout_gravity="center"
+	            android:clickable="true"/>
+        </LinearLayout>
+   		<LinearLayout 
+   		    android:id="@+id/end_search_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/start_search_layout"
+            android:orientation="horizontal">
+   		    <EditText
+	            android:id="@+id/end_tv"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="10dp"
+	            android:layout_marginRight="10dp"
+	            android:layout_weight="4"
+	            android:padding="10dp"
+	            android:background="@drawable/edittext"
+	            android:hint="@string/end_point"
+	            android:singleLine="true"
+	            android:textColor="#000000"
+	            android:textSize="@dimen/font_26" />
+   		    
+   		    <ImageView 
+   		         android:id="@+id/end_search_iv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginRight="10dp"
+	            android:src="@drawable/btn_search32"
+	            android:contentDescription="@string/search_img"
+	            android:layout_gravity="center"
+	            android:clickable="true"/>
+   		</LinearLayout>        
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/end_search_layout"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/route_search_btn"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="@string/start_search"/>
+             <Button
+                android:id="@+id/route_navi_btn"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:text="@string/start_navi"/>
+           
+        </LinearLayout>
+   	</RelativeLayout>
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/routemap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </com.amap.api.maps.MapView>
+
+</LinearLayout>

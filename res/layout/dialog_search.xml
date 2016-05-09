@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical">
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/search_linear"
+        android:orientation="horizontal">
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_search32"
+            android:contentDescription="@string/search_img"
+            android:layout_gravity="center"/>
+        <EditText 
+            android:id="@+id/search_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_26"/>
+    </LinearLayout>
+    <RadioGroup 
+        android:id="@+id/search_rgroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_linear"
+        android:orientation="vertical">
+        <RadioButton 
+            android:id="@+id/input_user_id_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/input_user_id"
+            android:textColor = "#003399"
+            android:checked="true"/>
+       <RadioButton 
+            android:id="@+id/scan_user_id_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/scan_user_id"
+            android:textColor = "#003399"/>
+       <RadioButton 
+            android:id="@+id/input_user_name_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/input_user_name"
+            android:textColor = "#003399"/>
+       <RadioButton 
+            android:id="@+id/scan_terminal_num_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/scan_terminal_num"
+            android:textColor = "#003399"/>
+       <RadioButton 
+            android:id="@+id/input_terminal_num_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/input_terminal_num"
+            android:textColor = "#003399"/>
+       <RadioButton 
+            android:id="@+id/input_user_addr_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/input_user_addr"
+            android:textColor = "#003399"/>
+    </RadioGroup>
+
+</RelativeLayout>

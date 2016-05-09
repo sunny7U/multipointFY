@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- string resources for activity_main.xml -->
+    <string name="app_name">电力导航</string>
+    <string name="action_settings">设置</string>
+    <string name="set_the_interval">请选择定位时间间隔：</string>
+    <string name="two_sec">2秒</string>
+    <string name="five_sec">5秒</string>
+    <string name="ten_sec">10秒</string>
+    <string name="fifteen_sec">15秒</string>
+    <string name="twenty_sec">20秒</string>
+	<string name="loc_collect">线路采集</string>
+	<string name="route_navi">普通作业</string>
+	<string name="user_data_modify">用户信息修改</string>
+	<string name="data_update">数据更新</string>
+	<string name="offline_map_download">离线地图下载</string>
+	
+<!-- string resources for activity_collection.xml -->
+	<string name="route_collect">路线采集</string>
+	<string name="start_record">开始</string>
+	<string name="add_point">添加点</string>
+	<string name="stop_record">结束</string>
+	<string name="start_point">起点：</string>
+    <string name="end_point">终点：</string>
+    
+<!-- string resources for activity_navi.xml -->
+	<string name="route_search">路线查询</string>
+	<string name="start_search">路线规划</string>
+	<string name="start_navi">实时导航</string>
+	
+<!-- string resources for activity_update.xml -->
+	<string name="date_update">本地数据更新</string>
+    <string name="url_hint">请输入服务器url，如：https://www.baidu.com</string>
+    <string name="comfirm">确定</string>
+    <string name="route_data_download">线路数据下载</string>
+    <string name="route_data_upload">线路数据上传</string>
+    <string name="user_data_download">用户数据下载</string>
+    <string name="user_data_upload">用户数据上传</string>
+
+	
+<!-- string resources for activity_add_point.xml -->
+	<string name="info_update">用户数据修正</string>
+	<string name="search_mode">选择搜索方式</string>
+    <string name="user_id">户		号 ：</string>
+    <string name="user_id_hint">请输入10位户号</string>
+    <string name="user_name">户		名：</string>
+    <string name="unit">单		 位：</string>
+    <string name="power_unit">供     电	所：</string>
+    <string name="district_num">台区编码：</string>
+    <string name="district_name">台区名称：</string>
+    <string name="terminal_num">终端局号：</string>
+    <string name="meter_num">表计局号：</string>
+    <string name="logical_addr">逻辑地址：</string>
+    <string name="collection_unit">采集单位：</string>
+    <string name="coordinate">经纬坐标：</string>
+    <string name="user_addr">用户地址：</string>
+    <string name="remarks">问题备注：</string>
+    <string name="scan_result">扫描结果：</string>
+    <string name="addr_hint">请输入尽可能详细的地址。</string>
+    <string name="remarks_hint">请输入尽可能详细的问题描述</string>
+    <string name="relocate">重新定位</string>
+    <string name="save_and_take">保存并取点</string>
+    <string name="save">保存修改</string>
+    <string name="cancel">放弃取点</string>
+    <string name="cancel2">退出本页</string>
+    <string name="search_user">搜索用户</string>
+    <string name="location_desc">位置名称：</string>
+    <string name="loc_hint">如，**村村委会</string>
+    <string name="district">所在台区:</string>
+    
+<!-- string resources for dialog_search.xml -->
+    <string name="search_img">搜索</string>
+    <string name="input_user_id">输入用户ID</string>
+    <string name="scan_user_id">扫描用户ID</string>
+    <string name="input_user_name">输入用户名</string>
+    <string name="scan_terminal_num">扫描表计条码</string>
+    <string name="input_terminal_num">输入表计条码</string>
+    <string name="input_user_addr">输入用户地址</string>
+    
+<!-- string resources for dialog_results_list.xml and listitem_result.xml -->
+	<string name="name">户名：</string> 
+	<string name="id">户号ID:</string>  
+    <string name="addr">地址：</string>
+     
+    
+    
+<!-- string resources for activity_offline.xml -->
+	<string name="offline_map">离线地图管理</string>
+    <string name="city_name_hint">请输入要下载的城市或省名</string>
+    <string name="search">搜索</string>
+    <string name="download">下载</string>
+    <string name="delete">删除地图</string>
+    <string name="all_cities">城市列表</string>
+    
+<!-- string resources for offline_myCities_list.xml -->
+	<string name="city_name">城市名</string>
+	<string name="update">更新</string>
+	<string name="remove">删除</string>
+	
+<!-- string resources for offline_myCities_list.xml -->
+	<string name="scan_text">将条码放入扫描框内，即可自动扫描</string>
+    
+</resources>
