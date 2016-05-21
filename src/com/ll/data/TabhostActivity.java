@@ -1,5 +1,6 @@
 package com.ll.data;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -16,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -33,9 +33,7 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 import com.amap.api.maps.model.LatLng;
 import com.ll.Zxing.CaptureActivity;
@@ -54,6 +52,7 @@ public class TabhostActivity extends Activity implements OnClickListener,
         OnItemSelectedListener{
     private String TAG=TabhostActivity.class.getName();
     String point; //用于记录当前显示出来的经纬度点
+    StringBuilder points = new StringBuilder();
     double[] lnglat=new double[2];
     String disNum,disName; //用于传递台区编码和台区名称
     Intent resultIntent;
@@ -79,7 +78,6 @@ public class TabhostActivity extends Activity implements OnClickListener,
     private Button mSearchUserButton;
     private Button mRelocateButton;
     private Button mSaveUserButton;
-    private Button mCancelUserButton;
     private TextView mScanResultTextView;
     
     //第二个tab页，以其他位置为采集点
@@ -88,7 +86,6 @@ public class TabhostActivity extends Activity implements OnClickListener,
     private Spinner mDistrictSpinner;
     private Button mLocateButton;
     private Button mSaveLocButton;
-    private Button mCancelLocButton;
     
     //数据库操作相关
     private SQLiteDatabase db;
@@ -101,9 +98,10 @@ public class TabhostActivity extends Activity implements OnClickListener,
         // TODO Auto-generated method stub
         LogUtil.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add_point);
-
+        ActionBar ab = getActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setIcon(R.drawable.actionbar_back_icon);
         dbHelper=new MyDatabaseHelper(this,  "Locations.db", null, 2);
         initViews();
     }
@@ -118,7 +116,14 @@ public class TabhostActivity extends Activity implements OnClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
-        LogUtil.d(TAG, "onOptionsItemSelected");
+    	int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            backToCollecting(points.toString(), disNum, disName, lnglat);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
     
@@ -141,6 +146,7 @@ public class TabhostActivity extends Activity implements OnClickListener,
      */
     private void initViews() {
         LogUtil.d(TAG, "initViews");
+        
         mTabHost=(TabHost)findViewById(R.id.tabhost);
         mTabHost.setup();
         mTabHost.addTab(mTabHost.newTabSpec("tab01")
@@ -179,13 +185,11 @@ public class TabhostActivity extends Activity implements OnClickListener,
         mSearchUserButton=(Button)findViewById(R.id.search_user_btn);
         mRelocateButton=(Button)findViewById(R.id.relocate_btn);
         mSaveUserButton=(Button)findViewById(R.id.save_btn);
-        mCancelUserButton=(Button)findViewById(R.id.cancel_btn);
         mScanResultTextView=(TextView)findViewById(R.id.scan2_et);
         
         mSearchUserButton.setOnClickListener(this);
         mRelocateButton.setOnClickListener(this);
         mSaveUserButton.setOnClickListener(this);
-        mCancelUserButton.setOnClickListener(this);
         
         //以其他位置为点的tab页
         mLocDescEditText=(EditText)findViewById(R.id.loc_desc_et);
@@ -193,7 +197,6 @@ public class TabhostActivity extends Activity implements OnClickListener,
         mDistrictSpinner=(Spinner)findViewById(R.id.spinner_district);
         mLocateButton=(Button)findViewById(R.id.locate_btn);
         mSaveLocButton=(Button)findViewById(R.id.save2_btn);
-        mCancelLocButton=(Button)findViewById(R.id.cancel2_btn);
         
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, queryDistrict());//查询出所有台区信息并绑定在spinner的adapter中
@@ -203,7 +206,6 @@ public class TabhostActivity extends Activity implements OnClickListener,
 		
         mLocateButton.setOnClickListener(this);
         mSaveLocButton.setOnClickListener(this);
-        mCancelLocButton.setOnClickListener(this);
     }
 
     /**
@@ -262,7 +264,7 @@ public class TabhostActivity extends Activity implements OnClickListener,
             }
             case KeyEvent.KEYCODE_BACK:
             {
-	        	quitDirectly();
+	        	backToCollecting(points.toString(), disNum, disName, lnglat);
                 return true;
             }
         }
@@ -286,17 +288,11 @@ public class TabhostActivity extends Activity implements OnClickListener,
             case R.id.save_btn:
             	saveUserData(mUserIdTextView.getText().toString().trim());
                 break;
-            case R.id.cancel_btn:
-                quitDirectly();
-                break;
             case R.id.locate_btn:
                 getLocation();
                 break;
             case R.id.save2_btn:
             	saveOtherLoc(mLocDescEditText.getText().toString().trim());
-                break;
-            case R.id.cancel2_btn:
-            	quitDirectly();
                 break;
             default:
                 break;
@@ -456,8 +452,8 @@ public class TabhostActivity extends Activity implements OnClickListener,
                 cursor.close();
                 db.close();
             }else{
-            	String disNum=cursor.getString(cursor.getColumnIndex("district_number"));
-            	String disName=cursor.getString(cursor.getColumnIndex("district_name"));
+            	disNum=cursor.getString(cursor.getColumnIndex("district_number"));
+            	disName=cursor.getString(cursor.getColumnIndex("district_name"));
             	String user_name=cursor.getString(cursor.getColumnIndex("user_name"));
                 String user_addr=mUserAddrEditText.getText().toString().trim();
                 String remarks=mRemarksEditText.getText().toString();
@@ -472,8 +468,12 @@ public class TabhostActivity extends Activity implements OnClickListener,
                 values.clear();
                 cursor.close();
                 db.close();
-                ToastUtil.show(this, "数据保存成功");
-                backToCollecting(user_id,user_name, disNum,disName, lnglat);
+                if(points == null){
+                	points = new StringBuilder();
+                }
+                points.append(user_id+"(+"+user_name+")"+"+");
+                
+                ToastUtil.show(this, "数据保存成功,可继续添加");
             }
         }
     }
@@ -496,7 +496,6 @@ public class TabhostActivity extends Activity implements OnClickListener,
             lnglat[1]=Double.parseDouble(coordinate[1]);
         }
         
-        
         if(null==loc || ("".equals(loc))){
         	ToastUtil.show(this, "位置名称不能为空");
         }else if(lnglat[0]==0.0 || lnglat[1]==0.0){
@@ -504,10 +503,9 @@ public class TabhostActivity extends Activity implements OnClickListener,
         }else if(disNum==null || "".equals(disNum)){
         	ToastUtil.show(this, "台区不能为空，请选择所属台区"); 	
         }else{
-        	
         	try {
         		db=dbHelper.getWritableDatabase();
-            	cursor=db.query("Node", null, "name = ? and district_number = ?", new String[]{locName,disNum} ,null, null, null);
+            	cursor=db.query("Node", null, "name like ? and district_number like ?", new String[]{"%"+locName+"%","%"+disNum+"%"} ,null, null, null);
             	LogUtil.d(TAG, locName+"/"+disNum+"/"+cursor.getCount());
 				if(cursor.moveToFirst()){
 					View alertView=LayoutInflater.from(TabhostActivity.this)
@@ -516,7 +514,7 @@ public class TabhostActivity extends Activity implements OnClickListener,
 					AlertDialog.Builder builder=new AlertDialog.Builder(TabhostActivity.this);
 					builder.setTitle("重复点警告");
 					builder.setView(alertView);
-					mAlerTextView.setText(disName+"已经存在名称为"+loc+"的位置点 ，继续选择该点或者给新点重新命名。");
+					mAlerTextView.setText(disName+"已经存在名称为"+loc+"的位置点 ，请重新命名。");
 					builder.setPositiveButton("重新命名", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -524,19 +522,13 @@ public class TabhostActivity extends Activity implements OnClickListener,
 							closeDialog(true, dialog);//允许关闭对话框
 						}
 					});
-					builder.setNegativeButton("继续取点", new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							closeDialog(true, dialog);
-							backToCollecting(locName,locName, disNum,disName,lnglat);
-						}
-					});
-					LogUtil.d(TAG, "builder");
 					builder.create().show();
 				}else{
-					backToCollecting(locName,locName, disNum,disName, lnglat);
+					if(points == null){
+	                	points = new StringBuilder();
+	                }
+	                points.append(locName+"+");
+	                ToastUtil.show(this, "数据保存成功,可继续添加");
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -551,21 +543,11 @@ public class TabhostActivity extends Activity implements OnClickListener,
     }
     
     /**
-     * 放弃取点直接退回路径采集页面
-     */
-    private void quitDirectly(){
-    	LogUtil.d(TAG, "quitDirectly");
-    	backToCollecting("","","","",lnglat);
-    }
-    
-    /**
      * 返回路径采集页面同时返回所采集途经点的信息
      */
-    public void backToCollecting(String locId,String locName,String disNum,String disName,double[] lnglat){
-    	LogUtil.i(TAG, "backToCollecting:"+locName+"/"+disName+"/");
+    public void backToCollecting(String points, String disNum,String disName,double[] lnglat){
    	 	Intent resultIntent=getIntent();
-	   	resultIntent.putExtra("locId", locId);
-	    resultIntent.putExtra("locName", locName);
+	    resultIntent.putExtra("points", points);
         resultIntent.putExtra("disNum", disNum);
         resultIntent.putExtra("disName", disName);
         resultIntent.putExtra("lnglat",lnglat);

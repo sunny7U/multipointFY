@@ -71,7 +71,12 @@
          <activity
             android:name=".data.TabhostActivity"
             android:label="@string/info_update"
-            android:screenOrientation="portrait" /> 
+            android:parentActivityName=".main.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+           </activity>  
             
         <activity
             android:name=".map.RouteNaviActivity"

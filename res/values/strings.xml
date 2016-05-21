@@ -67,6 +67,7 @@
     <string name="location_desc">位置名称：</string>
     <string name="loc_hint">如，**村村委会</string>
     <string name="district">所在台区:</string>
+    <string name="add_nearby_user">添加用戶</string>
     
 <!-- string resources for dialog_search.xml -->
     <string name="search_img">搜索</string>

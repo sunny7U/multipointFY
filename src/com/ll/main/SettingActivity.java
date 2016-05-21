@@ -38,6 +38,7 @@ public class SettingActivity extends Activity{
 	        
 	        ActionBar ab = getActionBar();
 	        ab.setDisplayHomeAsUpEnabled(true);
+	        ab.setIcon(R.drawable.actionbar_back_icon);
 	        initView();
 	    }
 	    

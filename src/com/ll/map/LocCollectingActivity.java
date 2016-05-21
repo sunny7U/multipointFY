@@ -151,6 +151,9 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     protected void onStop() {
         super.onStop();
         LogUtil.d(TAG, "onStop");
+        if(mLocationClient != null){
+        	mLocationClient.stopLocation();
+        }
         if(RecordingFlag==1){
     		aMap.clear();
     	}
@@ -160,6 +163,11 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     protected void onRestart() {
         super.onRestart();
         LogUtil.d(TAG, "onRestart");
+        if(mLocationClient != null){
+        	mLocationClient.startLocation();
+        }else{
+        	activate(mListener);
+        }
     }
 
     @Override
@@ -292,13 +300,11 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     	super.onActivityResult(requestCode, resultCode, data);
     	if (requestCode==0 && resultCode==0) {
     		 Bundle point=data.getExtras();
-    		 String locId=point.getString("locId");
-    		 String locName=point.getString("locName");
+    		 String points=point.getString("points");
     		 String disNum=point.getString("disNum");
     		 String disName=point.getString("disName");
     		 double[] lnglat=point.getDoubleArray("lnglat");
-    		 LogUtil.i(TAG, "RecordingFlag="+RecordingFlag+";start="+(start==null?"null":start.toString())+"locName="+locName+";disNum="+disNum);
-    		 if(locId==null || ("".equals(locId)) ){
+    		 if(points==null || ("".equals(points)) ){
     			 ToastUtil.show(this, "未添加中间点");
     			 if(RecordingFlag==1){ 
     				 RecordingFlag=0;
@@ -315,19 +321,19 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     			 //注意，Latlng构造器要先latitude后longitude
     			 LatLng latLng=new LatLng(lnglat[1], lnglat[0]);
     	         if(start==null){
-    	        	 start=locId;
+    	        	 start=points;
     	        	 prevLatLng=latLng;
     	         }else{
     	        	 distance=AMapUtils.calculateLineDistance(prevLatLng,latLng);
-    	        	 end=locId;
+    	        	 end=points;
     	        	 addRouteToDB();
-    	        	 start=locId;
+    	        	 start=points;
     	        	 prevLatLng=latLng;
     	         }
     	       
-    	         addNodeToDB(locId,disNum,lnglat);  //每次记录一个有效点时便把点名称和所属台区计入路线端点表中
+    	         addNodeToDB(points,disNum,lnglat);  //每次记录一个有效点时便把点名称和所属台区计入路线端点表中
     	         if(RecordingFlag==0){//按了结束点在回来或者还未开始记录
-    	        	 addMarkersToMap(latLng, locName,disName,RecordingFlag);
+    	        	 addMarkersToMap(latLng, points,disName,RecordingFlag);
     	        	 drawingPath(prevLatLng, RecordingFlag);
     	        	 prevLocation=null;
     	        	 RouteId=null;
@@ -337,7 +343,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
 //    	        	 }
     	        	 RouteId=AMapUtil.getCharAndNum(10);
     	        	 drawingPath(latLng, RecordingFlag);
-    	        	 addMarkersToMap(latLng,locName,disName, RecordingFlag);
+    	        	 addMarkersToMap(latLng,points,disName, RecordingFlag);
     	         }
     		 }
     		 if(mLocationClient==null){
@@ -487,7 +493,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     */
    public void addNodeToDB(String locName,String disNum,double[] lnglat){
        db=dbHelper.getWritableDatabase();
-       cursor=db.query("Node",null,"name = ? and district_number = ?",new String[]{locName,disNum},null,null,null);
+       cursor=db.query("Node",null,"name like ? and district_number like ?",new String[]{"%"+locName+"%", "%"+disNum+"%"},null,null,null);
        ContentValues values=new ContentValues();
        
        //新节点，直接添加；重复节点，更新数据
@@ -496,7 +502,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
            values.put("addr_lat", lnglat[1]);
            values.put("record_date",AMapUtil.getSystemTime());
            values.put("is_new", true);
-    	   db.update("Node", values, "name = ? and district_number = ?", new String[]{locName,disNum});
+    	   db.update("Node", values, "name like ? and district_number like ?",new String[]{"%"+locName+"%", "%"+disNum+"%"});
     	   values.clear();
            LogUtil.i(TAG , "addNodeToDB()重复点  Node:"+locName);
        }else{
