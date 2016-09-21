@@ -470,9 +470,10 @@ public class TabhostActivity extends Activity implements OnClickListener,
                 db.close();
                 if(points == null){
                 	points = new StringBuilder();
+                	points.append(user_name+"(户号-"+user_id+")");
+                }else{
+                	points.append("+"+user_name+"(户号-"+user_id+")");
                 }
-                points.append(user_id+"(+"+user_name+")"+"+");
-                
                 ToastUtil.show(this, "数据保存成功,可继续添加");
             }
         }
@@ -526,8 +527,11 @@ public class TabhostActivity extends Activity implements OnClickListener,
 				}else{
 					if(points == null){
 	                	points = new StringBuilder();
+	                	points.append(locName);
+	                }else{
+	                	points.append("+"+locName);
 	                }
-	                points.append(locName+"+");
+	                
 	                ToastUtil.show(this, "数据保存成功,可继续添加");
 				}
 			} catch (Exception e) {

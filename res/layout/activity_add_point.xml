@@ -548,6 +548,7 @@
 				</LinearLayout>
 	            
 	        </FrameLayout>
+	        
 	        <TabWidget
 	            android:id="@android:id/tabs"
 	            android:layout_width="fill_parent"

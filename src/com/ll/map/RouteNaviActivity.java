@@ -359,7 +359,7 @@ public class RouteNaviActivity extends Activity implements LocationSource,OnInfo
         			if(!db.isOpen()){
         	        	db=dbHelper.getReadableDatabase();
         	        }
-        			Cursor cursor=db.query("Node", null, "name = ?",new String[]{user_id}, null, null, null);
+        			Cursor cursor=db.query("Node", null, "name like ?",new String[]{"%"+user_id+"%"}, null, null, null);
         			if(cursor.moveToFirst()){
         				 userItems.add(new PoiItem(user_name, user_id,user_addr));
         				 cursor.close();
@@ -376,10 +376,16 @@ public class RouteNaviActivity extends Activity implements LocationSource,OnInfo
             		new String[]{"%"+location+"%"}, null, null, null);
     		if(nodeCursor.moveToFirst()){
     			while(!nodeCursor.isAfterLast()){
+    				String district_name = null;
         			int id=nodeCursor.getInt(nodeCursor.getColumnIndex("_id"));
         			String name=nodeCursor.getString(nodeCursor.getColumnIndex("name"));
         			String district_number=nodeCursor.getString(nodeCursor.getColumnIndex("district_number"));
-        			userItems.add(new PoiItem(String.valueOf(id),name,  district_number));
+        			Cursor cursor=db.query("Users", null, "district_number = ?",new String[]{district_number}, null, null, null);
+        			if(cursor.moveToFirst()){
+        				 district_name=cursor.getString(cursor.getColumnIndex("district_name"));
+        				 cursor.close();
+        			}
+        			userItems.add(new PoiItem( String.valueOf(id), name, district_name+"("+district_number+")"));
         			nodeCursor.moveToNext();
         		}
     		}else{
@@ -442,7 +448,7 @@ public class RouteNaviActivity extends Activity implements LocationSource,OnInfo
         final float INFINITY=Float.MAX_VALUE; //用于当前点最短路径长度初始化
         Map<String,Float> D=new ConcurrentHashMap<String, Float>();  //用于记录源点到点i(第一个参数)的当前最短路径(第二个参数)
         Map<String, String> P=new ConcurrentHashMap<String, String>();//记录路径，第一个参数是当前节点，第二个参数是当前节点的前驱节点
-        Queue<String> Q=new LinkedList<String>();  //队列，当点可以进行松弛操作且为入队，则可以让点入队
+        Queue<String> Q=new LinkedList<String>();  //队列，当前点可以进行松弛操作且未入队，则可以让点入队
         Map<String, Boolean> IsVisited=new HashMap<String, Boolean>(); //记录当前节点(第一个参数)是否已经入队(第二个参数)
         
         //获取起点和终点的台区编码
@@ -754,8 +760,9 @@ public class RouteNaviActivity extends Activity implements LocationSource,OnInfo
             db=dbHelper.getReadableDatabase();
             nodeCursor=db.query("Node", null, "name = ?", new String[]{nodeName},null, null, null);
             if(nodeCursor.moveToFirst()){
-           	 	String title=nodeName;
+           	 	String title=nodeName.replace("+", "\n");
             	String snippet=nodeCursor.getString(nodeCursor.getColumnIndex("district_number"));
+            	
             	Double addr_lng=nodeCursor.getDouble(nodeCursor.getColumnIndex("addr_lng"));
                 Double addr_lat=nodeCursor.getDouble(nodeCursor.getColumnIndex("addr_lat"));
                 LatLng latLng=new LatLng(addr_lat, addr_lng);
@@ -786,8 +793,8 @@ public class RouteNaviActivity extends Activity implements LocationSource,OnInfo
     			marker=aMap.addMarker(new MarkerOptions()
 						        .anchor(0.5f, 0.5f)
 						        .icon(BitmapDescriptorFactory.fromResource(markerIcon))
-						        .title(title)
-						        .snippet(snippet)
+						        .title("用户："+title)
+						        .snippet("台区："+snippet)
 						        .position(latLng)   
 						        .setFlat(true));
             }

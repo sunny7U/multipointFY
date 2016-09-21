@@ -151,9 +151,9 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     protected void onStop() {
         super.onStop();
         LogUtil.d(TAG, "onStop");
-        if(mLocationClient != null){
-        	mLocationClient.stopLocation();
-        }
+//        if(mLocationClient != null){
+//        	mLocationClient.stopLocation();
+//        }
         if(RecordingFlag==1){
     		aMap.clear();
     	}
@@ -163,11 +163,11 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
     protected void onRestart() {
         super.onRestart();
         LogUtil.d(TAG, "onRestart");
-        if(mLocationClient != null){
-        	mLocationClient.startLocation();
-        }else{
-        	activate(mListener);
-        }
+//        if(mLocationClient != null){
+//        	mLocationClient.startLocation();
+//        }else{
+//        	activate(mListener);
+//        }
     }
 
     @Override
@@ -387,16 +387,19 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
         if(prevLocation==null){
         	LogUtil.d(TAG, "prevLocation=null");
             prevLocation=arg0;
+            addPointToDB(arg0);
         }else if(!prevLocation.equals(arg0)) {
         	LogUtil.d(TAG, "prevLocation=not null");
-            aMap.addPolyline((new PolylineOptions())
-                    .add(prevLocation,arg0) //追加两个顶点到线段终点
-                    .geodesic(true)       //设置线段为大地曲线
-                    .visible(true)
-                    .color(Color.GREEN)); //设置线段颜色
-            prevLocation=arg0;
+        	if(AMapUtils.calculateLineDistance(prevLocation, arg0)<50){
+        		aMap.addPolyline((new PolylineOptions())
+                        .add(prevLocation,arg0) //追加两个顶点到线段终点
+                        .geodesic(true)       //设置线段为大地曲线
+                        .visible(true)
+                        .color(Color.GREEN)); //设置线段颜色
+                prevLocation=arg0;
+                addPointToDB(arg0);
+        	}
         }
-        addPointToDB(arg0);
     }
 
     /**
@@ -404,6 +407,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
      */
     private void addMarkersToMap(LatLng point,String title,String snippet ,int flag) {
     	LogUtil.i(TAG,flag==1? "start":(flag==2?"way":"stop")+"lng/lat="+point.longitude+"/"+point.latitude);
+    	title.replace("+", "\n");
         switch (flag) {
             case 1:{
             	if(startOptions==null){
@@ -413,7 +417,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
 	                    .setFlat(true);    //设置标记平贴地图
             	}
             	startOptions.title(title);
-            	startOptions.snippet(snippet);
+            	startOptions.snippet("台区："+snippet);
             	startOptions.position(point);
                 aMap.addMarker(startOptions);
                 break;}
@@ -426,7 +430,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
 	            		.setFlat(true);
             	}
             	wayOptions.title(title);
-            	wayOptions.snippet(snippet);
+            	wayOptions.snippet("台区："+snippet);
             	wayOptions.position(point);
                 aMap.addMarker(wayOptions);
                 break;}
@@ -438,7 +442,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
 	                    .setFlat(true);
             	}
             	stopOptions.title(title);
-            	stopOptions.snippet(snippet);
+            	stopOptions.snippet("台区："+snippet);
             	stopOptions.position(point);
                 aMap.addMarker(stopOptions);
                 break;}
@@ -584,7 +588,7 @@ public class LocCollectingActivity extends Activity implements AMapLocationListe
      */
     @Override
     public void onLocationChanged(AMapLocation arg0) {
-    	LogUtil.d(TAG,"定位成功："+arg0.toStr());
+    	LogUtil.d(TAG,"onLocationChanged："+arg0.toStr());
         if (arg0 != null && arg0.getErrorCode() == 0){
         	if(ToastUtil.isShowing()){
                 ToastUtil.dismissDialog();

@@ -4,6 +4,8 @@ import com.amap.api.maps.model.LatLng;
 
 public class Constants {
 	
+	public static final int REQUEST_IMAGE_CAPTURE = 1;
+	
 	public static final int TWO_SEC = 2;
 	public static final int FIVE_SEC = 5;
     public static final int TEN_SEC = 10;
